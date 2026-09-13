@@ -153,7 +153,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-sans text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors">
+    <div className="min-h-screen bg-white flex flex-col font-sans text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors w-full max-w-full overflow-x-hidden">
       {/* Navigation */}
       <Navbar
         user={user}
@@ -166,7 +166,7 @@ export default function App() {
       />
 
       {/* Main View Router */}
-      <div className="flex-1">
+      <div className="flex-1 w-full max-w-full overflow-x-hidden flex flex-col">
         {currentView === "landing" ? (
           <LandingPage
             onGetStarted={() => {

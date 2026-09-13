@@ -332,28 +332,28 @@ export const VoiceChatModal: React.FC<VoiceChatModalProps> = ({ isOpen, onClose,
   return (
     <div
       id="voice-chat-modal-backdrop"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-3 sm:p-4 backdrop-blur-sm transition-all"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-3 sm:p-4 backdrop-blur-xs transition-all overflow-y-auto overflow-x-hidden"
     >
       <div
         id="voice-chat-modal-container"
-        className="w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-200 bg-white shadow-2xl transition-all dark:border-slate-800 dark:bg-slate-900"
+        className="w-full max-w-sm sm:max-w-xl md:max-w-2xl my-auto max-h-[92vh] flex flex-col overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-200 bg-white shadow-2xl transition-all dark:border-slate-800 dark:bg-slate-900"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 px-4 sm:px-6 py-3 sm:py-4 dark:border-slate-800 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-md shadow-indigo-600/20">
-              <Radio className={`h-5 w-5 ${isConnected ? "animate-pulse" : ""}`} />
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-md shadow-indigo-600/20">
+              <Radio className={`h-4 w-4 sm:h-5 sm:w-5 ${isConnected ? "animate-pulse" : ""}`} />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <h3 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white truncate">
                   Gemini Live Voice
                 </h3>
-                <span className="rounded-md bg-indigo-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-indigo-700 dark:bg-indigo-950/80 dark:text-indigo-300">
-                  gemini-3.1-flash-live-preview
+                <span className="hidden xs:inline-block rounded-md bg-indigo-50 px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-indigo-700 dark:bg-indigo-950/80 dark:text-indigo-300">
+                  gemini-3.1-flash
                 </span>
               </div>
-              <p className="max-w-md truncate text-xs font-medium text-slate-500 dark:text-slate-400">
+              <p className="max-w-[190px] sm:max-w-md truncate text-[11px] sm:text-xs font-medium text-slate-500 dark:text-slate-400">
                 Discussing: <span className="font-semibold text-slate-700 dark:text-slate-300">{paper.title}</span>
               </p>
             </div>

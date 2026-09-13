@@ -25,7 +25,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   isLoggedIn,
 }) => {
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors">
+    <div className="min-h-[calc(100vh-4rem)] bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors w-full max-w-full overflow-x-hidden">
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-8 pb-14 sm:pt-16 sm:pb-24 lg:pt-20 lg:pb-28 border-b border-slate-100 dark:border-slate-800">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.indigo.50),white)] dark:bg-[radial-gradient(45rem_50rem_at_top,rgba(67,56,202,0.15),transparent)] opacity-70" />
@@ -235,17 +235,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             Clicking any prompt in the dashboard runs an automatic semantic search across the vector store
           </p>
 
-          <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
-            <span className="rounded-xl bg-slate-800/90 border border-slate-700 px-4 py-2 text-xs font-semibold text-slate-200 shadow-xs">
+          <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3 max-w-4xl mx-auto px-2">
+            <span className="rounded-xl bg-slate-800/90 border border-slate-700 px-3 sm:px-4 py-2 text-xs font-semibold text-slate-200 shadow-xs max-w-full break-words text-center">
               &quot;What methodology was used in this paper?&quot;
             </span>
-            <span className="rounded-xl bg-slate-800/90 border border-slate-700 px-4 py-2 text-xs font-semibold text-slate-200 shadow-xs">
+            <span className="rounded-xl bg-slate-800/90 border border-slate-700 px-3 sm:px-4 py-2 text-xs font-semibold text-slate-200 shadow-xs max-w-full break-words text-center">
               &quot;What datasets and benchmarks were tested?&quot;
             </span>
-            <span className="rounded-xl bg-slate-800/90 border border-slate-700 px-4 py-2 text-xs font-semibold text-slate-200 shadow-xs">
+            <span className="rounded-xl bg-slate-800/90 border border-slate-700 px-3 sm:px-4 py-2 text-xs font-semibold text-slate-200 shadow-xs max-w-full break-words text-center">
               &quot;What are the stated limitations and weaknesses?&quot;
             </span>
-            <span className="rounded-xl bg-slate-800/90 border border-slate-700 px-4 py-2 text-xs font-semibold text-slate-200 shadow-xs">
+            <span className="rounded-xl bg-slate-800/90 border border-slate-700 px-3 sm:px-4 py-2 text-xs font-semibold text-slate-200 shadow-xs max-w-full break-words text-center">
               &quot;Summarize the key empirical findings.&quot;
             </span>
           </div>

@@ -338,7 +338,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   ];
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] overflow-hidden bg-slate-100 dark:bg-slate-950 transition-colors relative">
+    <div className="flex h-[calc(100vh-4rem)] w-full max-w-full overflow-hidden bg-slate-100 dark:bg-slate-950 transition-colors relative">
       {/* Mobile Drawer Backdrop & Panel */}
       {mobileSidebarOpen && (
         <div className="fixed inset-0 z-50 flex md:hidden animate-in fade-in duration-200">
@@ -727,9 +727,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
                   {/* Quick Viva Prompt Pills (if few messages) */}
                   {messages.length <= 2 && (
-                    <div className="rounded-2xl border border-indigo-100 bg-white p-4 shadow-xs">
-                      <div className="flex items-center gap-2 mb-2.5 text-xs font-extrabold uppercase tracking-wider text-slate-800">
-                        <HelpCircle className="h-4 w-4 text-indigo-600" />
+                    <div className="rounded-2xl border border-indigo-100 bg-white p-3.5 sm:p-4 shadow-xs dark:bg-slate-900 dark:border-slate-800">
+                      <div className="flex items-center gap-2 mb-2.5 text-xs font-extrabold uppercase tracking-wider text-slate-800 dark:text-slate-200">
+                        <HelpCircle className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                         <span>Suggested Research Inquiries (Click to Ask):</span>
                       </div>
                       <div className="flex flex-wrap gap-2">
@@ -738,7 +738,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                             key={idx}
                             onClick={() => handleSendMessage(q)}
                             disabled={isSending}
-                            className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-indigo-400 hover:bg-indigo-50/80 hover:text-indigo-900 transition-colors text-left shadow-2xs"
+                            className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-indigo-400 hover:bg-indigo-50/80 hover:text-indigo-900 transition-colors text-left shadow-2xs dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 max-w-full break-words"
                           >
                             &quot;{q}&quot;
                           </button>
@@ -786,9 +786,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
                             {/* Assistant Markdown Content */}
                             {isUser ? (
-                              <p className="whitespace-pre-wrap">{msg.text}</p>
+                              <p className="whitespace-pre-wrap break-words">{msg.text}</p>
                             ) : (
-                              <div className="prose prose-sm max-w-none prose-slate dark:prose-invert prose-p:leading-relaxed prose-headings:font-black prose-headings:text-slate-900 dark:prose-headings:text-white prose-ul:my-2 prose-li:my-0.5">
+                              <div className="prose prose-sm max-w-none prose-slate dark:prose-invert prose-p:leading-relaxed prose-headings:font-black prose-headings:text-slate-900 dark:prose-headings:text-white prose-ul:my-2 prose-li:my-0.5 break-words overflow-x-auto">
                                 <ReactMarkdown>{msg.text}</ReactMarkdown>
                               </div>
                             )}
@@ -1170,7 +1170,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                               {chunk.charLength} chars
                             </span>
                           </div>
-                          <p className="text-xs font-mono text-slate-700 whitespace-pre-wrap leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100 dark:bg-slate-800/60 dark:border-slate-800 dark:text-slate-300">
+                          <p className="text-xs font-mono text-slate-700 whitespace-pre-wrap break-words leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100 dark:bg-slate-800/60 dark:border-slate-800 dark:text-slate-300">
                             {chunk.text}
                           </p>
                         </div>
