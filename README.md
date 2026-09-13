@@ -5,9 +5,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 
-> 🚀 **Live Production Deployment**: [https://agentic-research-rag-kb7s.onrender.com/](https://agentic-research-rag-kb7s.onrender.com/)  
-> 📖 **Interactive Swagger API Docs**: [https://agentic-research-rag-kb7s.onrender.com/docs](https://agentic-research-rag-kb7s.onrender.com/docs)  
-> ⚡ **System Health Status**: [https://agentic-research-rag-kb7s.onrender.com/api/health](https://agentic-research-rag-kb7s.onrender.com/api/health)
+> 🚀 **Live Demo**: [https://agentic-research-rag-kb7s.onrender.com/](https://agentic-research-rag-kb7s.onrender.com/)
 
 An advanced **Agentic Retrieval-Augmented Generation (RAG)** platform designed for AI & Machine Learning researchers, students, and engineers. The system enables users to upload dense academic research papers and textbooks (PDF format) and interactively interrogate them with autonomous agentic routing, dense semantic vector retrieval, page-level grounded citations, and real-time voice chat.
 
@@ -172,9 +170,8 @@ npm install
 
 ### Option A: Live Cloud Deployment (No Setup Required)
 The application is deployed live in production on Render:
-* **Web App URL**: [https://agentic-research-rag-kb7s.onrender.com/](https://agentic-research-rag-kb7s.onrender.com/)
-* **Swagger Interactive API**: [https://agentic-research-rag-kb7s.onrender.com/docs](https://agentic-research-rag-kb7s.onrender.com/docs)
-* **Backend Health Check**: [https://agentic-research-rag-kb7s.onrender.com/api/health](https://agentic-research-rag-kb7s.onrender.com/api/health)
+* **Web Application**: [https://agentic-research-rag-kb7s.onrender.com/](https://agentic-research-rag-kb7s.onrender.com/)
+* **Interactive API Documentation (Swagger)**: [https://agentic-research-rag-kb7s.onrender.com/docs](https://agentic-research-rag-kb7s.onrender.com/docs)
 
 ---
 
