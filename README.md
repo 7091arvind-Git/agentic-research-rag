@@ -1,5 +1,14 @@
 # Agentic Research Paper Analyzer & Chatbot (PaperMind)
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://agentic-research-rag-kb7s.onrender.com/)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+
+> 🚀 **Live Production Deployment**: [https://agentic-research-rag-kb7s.onrender.com/](https://agentic-research-rag-kb7s.onrender.com/)  
+> 📖 **Interactive Swagger API Docs**: [https://agentic-research-rag-kb7s.onrender.com/docs](https://agentic-research-rag-kb7s.onrender.com/docs)  
+> ⚡ **System Health Status**: [https://agentic-research-rag-kb7s.onrender.com/api/health](https://agentic-research-rag-kb7s.onrender.com/api/health)
+
 An advanced **Agentic Retrieval-Augmented Generation (RAG)** platform designed for AI & Machine Learning researchers, students, and engineers. The system enables users to upload dense academic research papers and textbooks (PDF format) and interactively interrogate them with autonomous agentic routing, dense semantic vector retrieval, page-level grounded citations, and real-time voice chat.
 
 ---
@@ -159,16 +168,26 @@ npm install
 
 ---
 
-## 6. Running the Application
+## 6. Running & Accessing the Application
 
-### Option A: 1-Click Production Mode (Windows)
+### Option A: Live Cloud Deployment (No Setup Required)
+The application is deployed live in production on Render:
+* **Web App URL**: [https://agentic-research-rag-kb7s.onrender.com/](https://agentic-research-rag-kb7s.onrender.com/)
+* **Swagger Interactive API**: [https://agentic-research-rag-kb7s.onrender.com/docs](https://agentic-research-rag-kb7s.onrender.com/docs)
+* **Backend Health Check**: [https://agentic-research-rag-kb7s.onrender.com/api/health](https://agentic-research-rag-kb7s.onrender.com/api/health)
+
+---
+
+### Option B: 1-Click Production Mode (Windows Local)
 Double-click `start_production.bat` or run:
 ```bash
 .\start_production.bat
 ```
 This script automatically activates the Python environment, builds the React frontend assets, and launches the unified production server at `http://localhost:8000`.
 
-### Option B: Development Mode (Hot-Reloading)
+---
+
+### Option C: Development Mode (Hot-Reloading)
 
 **Terminal 1 — Python FastAPI Backend:**
 ```bash
