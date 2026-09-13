@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+
+# Production builds
+build/
+dist/
+coverage/
+
+# Environment and secrets
+.env
+.env.*
+.env.local
+!.env.example
+
+# OS and Editor
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/

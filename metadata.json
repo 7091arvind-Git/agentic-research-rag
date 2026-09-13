@@ -1,0 +1,6 @@
+{
+  "name": "AI Research Paper Analyzer & Chatbot",
+  "description": "An AI-powered research paper analysis and Agentic RAG platform featuring PDF processing, vector search, Live Voice conversations, and Google Search grounding with Gemini AI.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

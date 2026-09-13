@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: ai-research-analyzer
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: APP_URL
+        fromService:
+          type: web
+          name: ai-research-analyzer
+          property: host
