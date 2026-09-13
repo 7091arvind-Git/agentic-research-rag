@@ -27,6 +27,8 @@ import {
   Square,
   Globe,
   Mic,
+  X,
+  Menu,
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { Paper, ChatMessage, IndexedChunk, CitationSource, WebGroundingSource } from "../types";
@@ -93,6 +95,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [searchFilter, setSearchFilter] = useState("");
   const [expandedSources, setExpandedSources] = useState<Record<string, boolean>>({});
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   // Audio / Speech state
   const [speakingMessageId, setSpeakingMessageId] = useState<string | null>(null);
@@ -335,9 +338,122 @@ export const Dashboard: React.FC<DashboardProps> = ({
   ];
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] overflow-hidden bg-slate-100 dark:bg-slate-950 transition-colors">
-      {/* Left Sidebar: Paper Library */}
-      <aside className="w-80 shrink-0 border-r border-slate-200 bg-white flex flex-col h-full dark:border-slate-800 dark:bg-slate-900 transition-colors">
+    <div className="flex h-[calc(100vh-4rem)] overflow-hidden bg-slate-100 dark:bg-slate-950 transition-colors relative">
+      {/* Mobile Drawer Backdrop & Panel */}
+      {mobileSidebarOpen && (
+        <div className="fixed inset-0 z-50 flex md:hidden animate-in fade-in duration-200">
+          <div
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"
+            onClick={() => setMobileSidebarOpen(false)}
+            aria-hidden="true"
+          />
+          <aside className="relative flex w-4/5 max-w-xs flex-1 flex-col bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 shadow-2xl z-10 animate-in slide-in-from-left duration-200">
+            {/* Header with Close button */}
+            <div className="p-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <h2 className="text-xs font-black uppercase tracking-widest text-slate-900 flex items-center gap-1.5 dark:text-white">
+                <BookOpen className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                <span>Research Papers ({papers.length})</span>
+              </h2>
+              <button
+                type="button"
+                onClick={() => setMobileSidebarOpen(false)}
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+                aria-label="Close Papers Menu"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Upload button & Search */}
+            <div className="p-3 border-b border-slate-200 dark:border-slate-800 space-y-2">
+              <button
+                onClick={() => {
+                  setMobileSidebarOpen(false);
+                  onOpenUpload();
+                }}
+                className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-slate-900 px-3 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-xs hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 transition-colors"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                <span>Upload New PDF</span>
+              </button>
+
+              <div className="relative">
+                <Search className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 h-full w-4 text-slate-400 dark:text-slate-500" />
+                <input
+                  type="text"
+                  placeholder="Filter papers..."
+                  value={searchFilter}
+                  onChange={(e) => setSearchFilter(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs font-medium text-slate-800 placeholder:text-slate-400 focus:bg-white focus:border-indigo-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
+                />
+              </div>
+            </div>
+
+            {/* Papers List */}
+            <div className="flex-1 overflow-y-auto p-3 space-y-2">
+              {filteredPapers.length === 0 ? (
+                <div className="text-center py-8 px-4">
+                  <p className="text-xs font-bold text-slate-700 dark:text-slate-300">No papers found</p>
+                  <button
+                    onClick={() => {
+                      setMobileSidebarOpen(false);
+                      onLoadSample();
+                    }}
+                    className="mt-2 text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400"
+                  >
+                    Load Sample Paper
+                  </button>
+                </div>
+              ) : (
+                filteredPapers.map((paper) => {
+                  const isSelected = selectedPaper?.id === paper.id;
+                  return (
+                    <div
+                      key={paper.id}
+                      onClick={() => {
+                        onSelectPaper(paper);
+                        setMobileSidebarOpen(false);
+                      }}
+                      className={`rounded-xl p-3 cursor-pointer border transition-all ${
+                        isSelected
+                          ? "border-indigo-600 bg-indigo-50/70 dark:bg-indigo-950/40 dark:border-indigo-500"
+                          : "border-slate-200 bg-white hover:bg-slate-50/80 dark:border-slate-800 dark:bg-slate-800/60"
+                      }`}
+                    >
+                      <div className="flex items-start gap-2.5 min-w-0">
+                        <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${isSelected ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300"}`}>
+                          <FileText className="h-4 w-4" />
+                        </div>
+                        <div className="min-w-0">
+                          <h3 className="text-xs font-bold truncate leading-tight dark:text-white" title={paper.title}>
+                            {paper.title}
+                          </h3>
+                          <div className="mt-1 flex items-center gap-1.5 text-[10px] font-semibold text-slate-500 dark:text-slate-400">
+                            <span>{paper.pageCount} pages</span>
+                            <span>&bull;</span>
+                            <span>{paper.chunkCount} chunks</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            <div className="p-3 border-t border-slate-200 bg-slate-50/70 dark:border-slate-800 dark:bg-slate-900/90 text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                <span>Vector Store Active</span>
+              </span>
+              <span className="text-[10px] font-mono text-indigo-700 dark:text-indigo-300">FastAPI</span>
+            </div>
+          </aside>
+        </div>
+      )}
+
+      {/* Desktop Left Sidebar: Paper Library */}
+      <aside className="hidden md:flex w-72 lg:w-80 shrink-0 border-r border-slate-200 bg-white flex-col h-full dark:border-slate-800 dark:bg-slate-900 transition-colors">
         {/* Sidebar Header */}
         <div className="p-4 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center justify-between mb-3">
@@ -458,7 +574,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <span className="h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-emerald-400/20" />
               <span>Vector Store Active</span>
             </span>
-            <span className="font-mono text-[10px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200/60 dark:bg-indigo-950/80 dark:text-indigo-300 dark:border-indigo-800">Gemini 3.8</span>
+            <span className="font-mono text-[10px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200/60 dark:bg-indigo-950/80 dark:text-indigo-300 dark:border-indigo-800">FastAPI RAG</span>
           </div>
         </div>
       </aside>
@@ -485,10 +601,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <span>Upload New PDF</span>
               </button>
               <button
-                onClick={onLoadSample}
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                onClick={() => setMobileSidebarOpen(true)}
+                className="md:hidden inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-xs font-semibold text-slate-700 shadow-xs hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
               >
-                <Sparkles className="h-4 w-4 text-indigo-600" />
+                <BookOpen className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                <span>Browse Papers ({papers.length})</span>
+              </button>
+              <button
+                onClick={onLoadSample}
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+              >
+                <Sparkles className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                 <span>Load Landmark Transformer Paper</span>
               </button>
             </div>
@@ -497,40 +620,61 @@ export const Dashboard: React.FC<DashboardProps> = ({
           /* Paper Workspace Layout */
           <div className="flex-1 flex flex-col h-full overflow-hidden">
             {/* Paper Header Bar */}
-            <header className="border-b border-slate-200 bg-white px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 dark:border-slate-800 dark:bg-slate-900 transition-colors">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-600/10 dark:bg-indigo-950/80 dark:text-indigo-400 dark:ring-indigo-700/40">
-                  <BookOpen className="h-5 w-5" />
-                </div>
-                <div className="min-w-0">
-                  <h1 className="text-base font-black tracking-tight text-slate-900 truncate max-w-xl dark:text-white" title={selectedPaper.title}>
-                    {selectedPaper.title}
-                  </h1>
-                  <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 mt-0.5 dark:text-slate-500">
-                    <span className="font-mono text-[11px] text-slate-600 truncate max-w-[200px] dark:text-slate-400">
-                      {selectedPaper.filename}
-                    </span>
-                    <span>&bull;</span>
-                    <span>{selectedPaper.pageCount} Pages</span>
-                    <span>&bull;</span>
-                    <span className="text-slate-600 font-semibold dark:text-slate-400">{selectedPaper.chunkCount} Chunks</span>
-                    <span>&bull;</span>
-                    <span className="inline-flex items-center gap-1 text-emerald-700 font-bold uppercase tracking-wider text-[10px] bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60 dark:bg-emerald-950/60 dark:text-emerald-400 dark:border-emerald-800">
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                      Indexed &amp; Ready for RAG
-                    </span>
+            <header className="border-b border-slate-200 bg-white px-3 sm:px-6 py-2.5 sm:py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-2.5 sm:gap-4 dark:border-slate-800 dark:bg-slate-900 transition-colors shrink-0">
+              <div className="flex items-center justify-between gap-2 min-w-0 w-full md:w-auto">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                  {/* Mobile open library drawer button */}
+                  <button
+                    type="button"
+                    onClick={() => setMobileSidebarOpen(true)}
+                    className="md:hidden flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 active:scale-95 transition-all"
+                    title="Open Paper Library"
+                    aria-label="Open Paper Library"
+                  >
+                    <BookOpen className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                  </button>
+
+                  <div className="hidden sm:flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-600/10 dark:bg-indigo-950/80 dark:text-indigo-400 dark:ring-indigo-700/40">
+                    <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <h1 className="text-xs sm:text-base font-black tracking-tight text-slate-900 truncate max-w-[200px] sm:max-w-md lg:max-w-xl dark:text-white" title={selectedPaper.title}>
+                      {selectedPaper.title}
+                    </h1>
+                    <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-semibold text-slate-400 mt-0.5 dark:text-slate-500">
+                      <span>{selectedPaper.pageCount} Pages</span>
+                      <span>&bull;</span>
+                      <span>{selectedPaper.chunkCount} Chunks</span>
+                      <span className="hidden sm:inline">&bull;</span>
+                      <span className="hidden sm:inline-flex items-center gap-1 text-emerald-700 font-bold uppercase tracking-wider text-[10px] bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/60 dark:bg-emerald-950/60 dark:text-emerald-400 dark:border-emerald-800">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                        Indexed
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Actions: Live Voice Mode & Navigation Tabs */}
-              <div className="flex items-center gap-3">
+                {/* Mobile Voice button */}
                 {onOpenVoiceChat && (
                   <button
-                    id="live-voice-chat-btn"
+                    id="live-voice-chat-btn-mobile"
                     type="button"
                     onClick={onOpenVoiceChat}
-                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 px-3.5 py-1.5 text-xs font-bold text-white shadow-sm shadow-indigo-600/20 hover:from-indigo-500 hover:to-indigo-600 active:scale-95 transition-all"
+                    className="md:hidden shrink-0 inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 px-2.5 py-1.5 text-xs font-bold text-white shadow-xs"
+                  >
+                    <Mic className="h-3.5 w-3.5 animate-pulse" />
+                    <span className="text-[11px]">Voice</span>
+                  </button>
+                )}
+              </div>
+
+              {/* Actions & Navigation Tabs */}
+              <div className="flex items-center justify-between md:justify-end gap-2 w-full md:w-auto">
+                {onOpenVoiceChat && (
+                  <button
+                    type="button"
+                    onClick={onOpenVoiceChat}
+                    className="hidden md:inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 px-3.5 py-1.5 text-xs font-bold text-white shadow-sm shadow-indigo-600/20 hover:from-indigo-500 hover:to-indigo-600 active:scale-95 transition-all shrink-0"
                   >
                     <Mic className="h-3.5 w-3.5 text-white animate-pulse" />
                     <span>Live Voice</span>
@@ -540,37 +684,37 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   </button>
                 )}
 
-                {/* Navigation Tabs */}
-                <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200/60 dark:bg-slate-800 dark:border-slate-700">
+                {/* Navigation Tabs (Full width 3 columns on mobile) */}
+                <div className="grid grid-cols-3 sm:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200/60 dark:bg-slate-800 dark:border-slate-700 w-full sm:w-auto">
                   <button
                     onClick={() => handleTabChange("chat")}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all ${
+                    className={`rounded-lg px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-center truncate transition-all ${
                       activeTab === "chat"
                         ? "bg-white text-slate-900 shadow-xs ring-1 ring-slate-200 font-extrabold dark:bg-slate-900 dark:text-white dark:ring-slate-700"
                         : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
                     }`}
                   >
-                    💬 Chat &amp; Ask
+                    💬 Chat
                   </button>
                   <button
                     onClick={() => handleTabChange("summary")}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all ${
+                    className={`rounded-lg px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-center truncate transition-all ${
                       activeTab === "summary"
                         ? "bg-white text-slate-900 shadow-xs ring-1 ring-slate-200 font-extrabold dark:bg-slate-900 dark:text-white dark:ring-slate-700"
                         : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
                     }`}
                   >
-                    📑 Executive Summary
+                    📑 Summary
                   </button>
                   <button
                     onClick={() => handleTabChange("chunks")}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all ${
+                    className={`rounded-lg px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-center truncate transition-all ${
                       activeTab === "chunks"
                         ? "bg-white text-slate-900 shadow-xs ring-1 ring-slate-200 font-extrabold dark:bg-slate-900 dark:text-white dark:ring-slate-700"
                         : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
                     }`}
                   >
-                    🔍 Vector Chunks ({selectedPaper.chunkCount})
+                    🔍 Chunks ({selectedPaper.chunkCount})
                   </button>
                 </div>
               </div>
@@ -810,22 +954,22 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 </div>
 
                 {/* Bottom Input Area */}
-                <div className="p-4 bg-white border-t border-slate-200 dark:border-slate-800 dark:bg-slate-900 transition-colors">
+                <div className="p-2.5 sm:p-4 bg-white border-t border-slate-200 dark:border-slate-800 dark:bg-slate-900 transition-colors shrink-0">
                   {/* Controls: Search Grounding toggle and Live voice mode */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                  <div className="flex items-center justify-between gap-1.5 mb-2">
                     <button
                       type="button"
                       id="toggle-search-grounding-btn"
                       onClick={() => setSearchGroundingEnabled((prev) => !prev)}
                       title="Ground answers with Google Search and gemini-3.5-flash"
-                      className={`inline-flex items-center gap-1.5 rounded-xl px-2.5 py-1 text-xs font-bold transition-all ${
+                      className={`inline-flex items-center gap-1.5 rounded-xl px-2 sm:px-2.5 py-1 text-[11px] sm:text-xs font-bold transition-all ${
                         searchGroundingEnabled
                           ? "bg-sky-100 text-sky-800 border border-sky-300 dark:bg-sky-950/80 dark:text-sky-300 dark:border-sky-700 shadow-2xs"
                           : "bg-slate-100 text-slate-500 border border-slate-200 hover:text-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:text-slate-200"
                       }`}
                     >
                       <Globe className="h-3.5 w-3.5 text-sky-600 dark:text-sky-400" />
-                      <span>Search Grounding: {searchGroundingEnabled ? "ON (gemini-3.5-flash)" : "OFF"}</span>
+                      <span>Search: {searchGroundingEnabled ? "ON" : "OFF"}</span>
                     </button>
 
                     {onOpenVoiceChat && (
@@ -833,10 +977,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         type="button"
                         id="voice-chat-shortcut-btn"
                         onClick={onOpenVoiceChat}
-                        className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
+                        className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
                       >
                         <Mic className="h-3.5 w-3.5 animate-pulse" />
-                        <span>Speak with Paper (Live Audio)</span>
+                        <span className="hidden sm:inline">Speak with Paper</span>
+                        <span className="sm:hidden">Live Voice</span>
                       </button>
                     )}
                   </div>
@@ -846,26 +991,26 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       e.preventDefault();
                       handleSendMessage();
                     }}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-1.5 sm:gap-2"
                   >
                     <input
                       type="text"
                       value={inputQuestion}
                       onChange={(e) => setInputQuestion(e.target.value)}
                       disabled={isSending}
-                      placeholder="Ask a question about this research paper (e.g. methodology, datasets, findings)..."
-                      className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50 font-medium dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
+                      placeholder="Ask a question about this paper..."
+                      className="flex-1 rounded-xl border border-slate-300 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50 font-medium dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
                     />
                     <button
                       type="submit"
                       disabled={!inputQuestion.trim() || isSending}
-                      className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow hover:bg-slate-800 disabled:opacity-40 dark:bg-indigo-600 dark:hover:bg-indigo-500 transition-all"
+                      className="inline-flex h-9 w-9 sm:h-auto sm:w-auto items-center justify-center rounded-xl bg-slate-900 sm:px-5 sm:py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow hover:bg-slate-800 disabled:opacity-40 dark:bg-indigo-600 dark:hover:bg-indigo-500 transition-all shrink-0"
                     >
                       <Send className="h-4 w-4" />
                     </button>
                   </form>
-                  <p className="mt-1.5 text-center text-[10px] font-semibold text-slate-400 uppercase tracking-wider dark:text-slate-500">
-                    Responses are generated via Agentic RAG and grounded directly in retrieved PDF chunks
+                  <p className="mt-1 text-center text-[9px] sm:text-[10px] font-semibold text-slate-400 uppercase tracking-wider dark:text-slate-500 truncate">
+                    Agentic RAG grounded in retrieved PDF chunks
                   </p>
                 </div>
               </div>
@@ -873,8 +1018,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
             {/* TAB 2: Executive Summary & Technical Insights */}
             {activeTab === "summary" && (
-              <div className="flex-1 overflow-y-auto p-6 bg-slate-50 dark:bg-slate-950 transition-colors">
-                <div className="max-w-4xl mx-auto space-y-6">
+              <div className="flex-1 overflow-y-auto p-3 sm:p-6 bg-slate-50 dark:bg-slate-950 transition-colors">
+                <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
                   {/* Action Header */}
                   <div className="flex items-center justify-between">
                     <div>
@@ -978,17 +1123,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
             {/* TAB 3: Vector Chunks Explorer (Viva transparency) */}
             {activeTab === "chunks" && (
-              <div className="flex-1 overflow-y-auto p-6 bg-slate-50 dark:bg-slate-950 transition-colors">
+              <div className="flex-1 overflow-y-auto p-3 sm:p-6 bg-slate-50 dark:bg-slate-950 transition-colors">
                 <div className="max-w-4xl mx-auto space-y-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
-                      <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">Vector Chunks Explorer</h2>
+                      <h2 className="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white">Vector Chunks Explorer</h2>
                       <p className="text-xs text-slate-500 font-medium dark:text-slate-400">
                         Transparent inspection of all {chunks.length} extracted and chunked segments in the vector database.
                       </p>
                     </div>
-                    <span className="rounded-full bg-indigo-50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-indigo-700 border border-indigo-200 dark:bg-indigo-950/80 dark:text-indigo-300 dark:border-indigo-800">
-                      Window: 750 Chars &bull; Overlap: 150 Chars
+                    <span className="self-start sm:self-auto rounded-full bg-indigo-50 px-3 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-indigo-700 border border-indigo-200 dark:bg-indigo-950/80 dark:text-indigo-300 dark:border-indigo-800">
+                      Window: 2000 Chars &bull; Overlap: 200 Chars
                     </span>
                   </div>
 
